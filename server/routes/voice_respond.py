@@ -1,3 +1,8 @@
+"""
+Retrieval-only endpoint for Vapi tool calls. Supports an optional ?category=
+query param in the URL so each assistant's tool can be scoped to its own
+market/content, preventing cross-market contamination in a shared index.
+"""
 from fastapi import APIRouter, Request
 from langchain_cohere import CohereEmbeddings
 from pinecone import Pinecone
@@ -6,10 +11,10 @@ import os
 
 router = APIRouter()
 
-RELEVANCE_THRESHOLD = 0.35
+RELEVANCE_THRESHOLD = 0.1
 
 
-def _search(query: str) -> str:
+def _search(query: str, category: str = None) -> str:
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
     index = pc.Index(os.environ.get("PINECONE_INDEX_NAME", "medicalindex"))
     embed_model = CohereEmbeddings(
@@ -17,7 +22,9 @@ def _search(query: str) -> str:
         model="embed-english-light-v3.0"
     )
     embedded_query = embed_model.embed_query(query)
-    res = index.query(vector=embedded_query, top_k=3, include_metadata=True)
+
+    filter_dict = {"category": {"$eq": category}} if category else None
+    res = index.query(vector=embedded_query, top_k=3, include_metadata=True, filter=filter_dict)
 
     matches = res.get("matches", [])
     usable = [m for m in matches if m.get("score", 0) >= RELEVANCE_THRESHOLD]
@@ -34,6 +41,7 @@ def _search(query: str) -> str:
 
 @router.post("/voice/search_kb")
 async def search_kb(request: Request):
+    category = request.query_params.get("category")
     body = await request.json()
     tool_calls = body.get("message", {}).get("toolCallList", [])
 
@@ -44,7 +52,7 @@ async def search_kb(request: Request):
         query = args.get("query", "") if isinstance(args, dict) else ""
 
         try:
-            result_text = _search(query) if query else "No query provided."
+            result_text = _search(query, category=category) if query else "No query provided."
         except Exception:
             logger.exception("Error in voice search_kb")
             result_text = "Knowledge base lookup failed. Offer to escalate to a human."

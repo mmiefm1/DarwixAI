@@ -5,7 +5,8 @@ from routes.upload_pdfs import router as upload_router
 from routes.ask_question import router as ask_router
 from routes.scrape_url import router as scrape_router
 from routes.voice_respond import router as voice_router
-
+from routes.add_content import router as add_content_router
+from routes.query_test import router as query_test_router
 
 app=FastAPI(title="Medical Assistant API",description="API for AI Medical Assistant Chatbot")
 
@@ -29,3 +30,5 @@ app.include_router(ask_router)
 app.include_router(scrape_router)
 # 4. voice agent connection point (Vapi tool-call target)
 app.include_router(voice_router)
+app.include_router(add_content_router)
+app.include_router(query_test_router)

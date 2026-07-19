@@ -111,3 +111,36 @@ def load_web_content(scraped_docs: list, category: str = "website", version: str
         print(f"Upserted {len(chunks)} chunks for {doc['source']}")
 
     return {"total_chunks_indexed": total_chunks}
+
+def load_raw_text(title: str, text: str, category: str = "general",
+                   source: str = "manual_entry", version: str = "1.0"):
+    """
+    Directly index hand-written content (synthetic policy docs, FAQs you
+    write yourself) without needing a PDF or a scrapeable URL. Useful for
+    localized content where finding a real source page quickly isn't practical.
+    """
+    pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+    index = pc.Index(PINECONE_INDEX_NAME)
+    embed_model = CohereEmbeddings(
+        cohere_api_key=os.environ["COHERE_API_KEY"],
+        model="embed-english-light-v3.0"
+    )
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+
+    cleaned = clean_text(text)
+    chunks = splitter.split_text(cleaned["content"])
+
+    metadatas = [{
+        "text": chunk,
+        "title": title,
+        "source": source,
+        "category": category,
+        "version": version,
+        "pii": cleaned["pii_detected"],
+    } for chunk in chunks]
+    ids = [f"manual-{hash(title) & 0xffffffff}-{i}" for i in range(len(chunks))]
+
+    embeddings = embed_model.embed_documents(chunks)
+    index.upsert(vectors=zip(ids, embeddings, metadatas))
+
+    return {"total_chunks_indexed": len(chunks)}

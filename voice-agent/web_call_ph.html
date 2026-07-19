@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PH Insurance Voice Assistant</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f5f5f7; }
+    h1 { font-size: 20px; color: #333; }
+    p { color: #666; max-width: 400px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>Kausapin ang aming Insurance Assistant</h1>
+  <p>I-click ang button para magsimula ng usapan.</p>
+  <vapi-widget
+    public-key="d6394409-917e-46f8-a1fc-f87a7e03acf3"
+    assistant-id="1cff6707-da23-4a01-a38b-2c3b0cfad7f9"
+    mode="voice" theme="light" position="bottom-right" size="full"
+    start-button-text="Talk to Assistant" end-button-text="End Call"
+    voice-show-transcript="true">
+  </vapi-widget>
+  <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js" async type="text/javascript"></script>
+</body>
+</html>
