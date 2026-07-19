@@ -1,7 +1,7 @@
 """
 Retrieval-only endpoint for Vapi tool calls. Supports an optional ?category=
 query param in the URL so each assistant's tool can be scoped to its own
-market/content, preventing cross-market contamination in a shared index.
+market/content.
 """
 from fastapi import APIRouter, Request
 from langchain_cohere import CohereEmbeddings
@@ -11,7 +11,7 @@ import os
 
 router = APIRouter()
 
-RELEVANCE_THRESHOLD = 0.1
+RELEVANCE_THRESHOLD = 0.28
 
 
 def _search(query: str, category: str = None) -> str:
@@ -48,7 +48,9 @@ async def search_kb(request: Request):
     results = []
     for call in tool_calls:
         call_id = call.get("id")
-        args = call.get("arguments", {})
+        # arguments is nested inside "function", not at the top level of the tool call
+        function_data = call.get("function", {})
+        args = function_data.get("arguments", {})
         query = args.get("query", "") if isinstance(args, dict) else ""
 
         try:
