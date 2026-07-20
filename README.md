@@ -1,5 +1,7 @@
 # AI Engineer Assessment Submission
 
+Video Walkthrough: https://www.loom.com/share/5274d08af8ca429eb8a4e7fc7943b838
+
 ## Overview
 This project implements:
 - **Q1:** A knowledge-grounded voice agent for health insurance lead qualification
