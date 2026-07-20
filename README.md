@@ -116,61 +116,68 @@ all three assistants without cross-contamination.
 
 ## 📁 Project Structure
 
+## 📁 Project Structure
+
 ```text
 Medical-AI-Assistant-main/
 │
-├── client/                              # Frontend application
+├── client/                                 # Frontend application
 │   ├── components/
-│   │   ├── chatUI.py                    # Chat interface
-│   │   ├── history_download.py          # Chat history download
-│   │   └── upload.py                    # PDF upload UI
+│   │   ├── chatUI.py                       # Chat interface
+│   │   ├── history_download.py             # Chat history download
+│   │   └── upload.py                       # PDF upload UI
 │   │
 │   ├── utils/
-│   │   ├── api.py                       # Backend API calls
-│   │   ├── app.py                       # Client entry point
-│   │   └── config.py                    # Client configuration
+│   │   ├── api.py                          # Backend API communication
+│   │   ├── app.py                          # Streamlit entry point
+│   │   └── config.py                       # Client configuration
 │   │
 │   └── requirements.txt
 │
-├── server/                              # Backend application
-│   │
+├── docs/                                   # Project documentation
+│   ├── Audio/                              # Recorded voice call samples
+│   ├── transcripts/                        # Conversation transcripts
+│   ├── retrieval_test_report.md            # RAG retrieval evaluation (Q2)
+│   └── localization_notes.md               # Localization & ASR evaluation (Q3)
+│
+├── server/                                 # FastAPI backend
 │   ├── middlewares/
-│   │   └── exception_handlers.py        # Global exception handling
+│   │   └── exception_handlers.py           # Global exception handling
 │   │
 │   ├── modules/
-│   │   ├── cleaning.py                  # Data preprocessing
-│   │   ├── llm.py                       # LLM integration
-│   │   ├── load_vectorstore.py          # Vector database loader
-│   │   ├── pdf_handlers.py              # PDF processing
-│   │   ├── query_handlers.py            # Query processing
-│   │   └── web_scraper.py               # Website scraping
+│   │   ├── cleaning.py                     # Data preprocessing
+│   │   ├── llm.py                          # LLM integration
+│   │   ├── load_vectorstore.py             # Vector database loader
+│   │   ├── pdf_handlers.py                 # PDF processing
+│   │   ├── query_handlers.py               # Query processing
+│   │   └── web_scraper.py                  # Website scraping
 │   │
 │   ├── routes/
-│   │   ├── add_content.py               # Add custom knowledge
-│   │   ├── ask_question.py              # Chat endpoint
-│   │   ├── query_test.py                # Query testing
-│   │   ├── scrape_url.py                # URL scraping endpoint
-│   │   ├── upload_pdfs.py               # PDF upload endpoint
-│   │   └── voice_respond.py             # Voice response endpoint
+│   │   ├── add_content.py                  # Add custom knowledge
+│   │   ├── ask_question.py                 # Chat endpoint
+│   │   ├── query_test.py                   # Retrieval testing endpoint
+│   │   ├── scrape_url.py                   # Website ingestion endpoint
+│   │   ├── upload_pdfs.py                  # PDF upload endpoint
+│   │   └── voice_respond.py                # Voice assistant endpoint
 │   │
-│   ├── uploaded_docs/                   # Uploaded PDF storage
-│   ├── .env                             # Environment variables
-│   ├── logger.py                        # Logging configuration
-│   ├── main.py                          # FastAPI application entry point
+│   ├── uploaded_docs/                      # Uploaded PDF storage
+│   ├── .env                                # Environment variables
+│   ├── logger.py                           # Logging configuration
+│   ├── main.py                             # FastAPI application entry point
 │   ├── requirements.txt
 │   └── test.py
 │
-├── tests/                               # Automated tests
+├── tests/                                  # Automated tests
 │   ├── test_live_endpoint.py
 │   └── test_voice_endpoint.py
 │
-├── multilingual/                        # Multilingual voice configurations
+├── multilingual/                           # Multilingual voice configurations
 │   ├── vapi_id_config.txt
 │   ├── vapi_ph_config.txt
 │   ├── web_call_id.html
 │   └── web_call_ph.html
 │
-├── voice-agent/                         # Voice AI integration
+├── voice-agent/                            # Voice assistant configuration
 │   ├── vapi_en_config.txt
 │   └── web-calling-interface.html
 │
@@ -186,20 +193,16 @@ Medical-AI-Assistant-main/
 
 | Folder/File | Description |
 |-------------|-------------|
-| **client/** | Frontend application |
-| **server/** | FastAPI backend services |
-| **server/routes/** | API endpoints |
-| **server/modules/** | Business logic (LLM, PDF, Vector DB, Scraping) |
-| **server/middlewares/** | Exception handling middleware |
-| **tests/** | API and integration tests |
-| **multilingual/** | Language-specific voice configurations |
+| **client/** | Streamlit frontend application |
+| **server/** | FastAPI backend and Retrieval-Augmented Generation (RAG) pipeline |
+| **tests/** | Automated API and integration tests |
+| **docs/** | Project documentation, evaluation reports, multilingual transcripts, and audio recordings |
+| **multilingual/** | Language-specific voice assistant configurations |
 | **voice-agent/** | Vapi voice assistant integration |
-| **uploaded_docs/** | Uploaded PDFs |
-| **main.py** | Application entry point |
-| **requirements.txt** | Python dependencies |
-| **pyproject.toml** | Project configuration |
-| **README.md** | Project documentation |
-
+| **.env** | Environment variables *(excluded from version control)* |
+| **pyproject.toml** | Python project configuration |
+| **requirements.txt** | Project dependencies |
+| **README.md** | Project documentation and setup guide |
 
 ## Setup Instructions
 
@@ -249,10 +252,14 @@ and settings documented in `voice_agent/*.txt` and `multilingual/*.txt`.
 - Open the relevant `web_call_*.html` file (after filling in your Vapi
   public key + assistant ID) to place a live test call
 
+
+
+
 ## Q1 — Health Insurance Voice Agent
 - **Use case:** Health insurance lead qualification
 - **Web calling interface:** `voice_agent/web_calling_interface.html`
-- **Test call recordings/transcripts:** `docs/transcripts/q1_*.txt`
+- **Test call recordings/transcripts:** `docs/transcripts/Ques1_*.txt`
+- **Sample voice call audio:** [`docs/Audio/Ques1_voice_agent_english.wav`](docs/Audio/Ques1_voice_agent_english.wav)
 - **Test coverage:** cooperative customer, objection, incomplete/conflicting
   details, out-of-scope question, human-assistance request 
 - **Grounded fallback confirmed:** agent explicitly states when information
@@ -264,7 +271,7 @@ and settings documented in `voice_agent/*.txt` and `multilingual/*.txt`.
 - **Retrieval:** Pinecone cosine similarity, category-filtered, relevance
   threshold of 0.28 (tuned against observed score distribution from real
   scraped content — see limitations)
-- **Retrieval test report:** `docs/retrieval_test_report.md` — 7 queries
+- **Retrieval test report:** `docs/Ques2_retrieval_test_report.md` — 5 queries
   covering product, qualification, policy, objection, FAQ, and a negative
   (unanswerable) test case
 - **PII handling:** regex-based detection/masking for web-scraped and
@@ -301,3 +308,66 @@ and nudge examples here once built]*
 - Native-speaker validation pass for PH/Indonesia scripts and pronunciation.
 - Add automated retrieval regression tests.
 - Add proper logging/monitoring for tool-call failures in production.
+
+
+## 📊 Retrieval Evaluation Summary
+
+You can refer to detailed version of outputs in "docs/retrieval_test_report.md"
+
+The retrieval pipeline was evaluated using **five representative queries** covering key user intents: **Product**, **Policy**, **Qualification**, **FAQ**, and **Objection Handling**. For each query, the vector database returned the **top-3 most relevant chunks** based on semantic similarity. A **minimum relevance threshold of 0.35** was used by the voice assistant to determine whether the retrieved context was sufficiently reliable for response generation.
+
+### Evaluation Results
+
+| Category | Top Score | Verdict | Summary |
+|----------|:---------:|:-------:|---------|
+| 🏥 Product | **0.3235** | ❌ Rejected | No relevant knowledge existed in the knowledge base. The retrieval system returned loosely related health policy benefits, but the confidence score remained below the threshold, preventing an incorrect response. |
+| 📋 Policy | **0.6265** | ✅ Correct | Successfully retrieved eligibility information directly related to the user's question, supported by multiple relevant documents. |
+| 💼 Qualification | **0.3668** | ⚠️ Incorrect Retrieval | Retrieved documents containing similar numeric values (₹50,000) rather than qualification criteria, highlighting a knowledge base coverage gap. |
+| ❓ FAQ | **0.4390** | ⚠️ Ambiguous | Retrieved multiple valid processing timelines (claim settlement, cashless approval, and application processing). The query requires clarification before generating a final answer. |
+| 💬 Objection Handling | **0.4230** | ✅ Correct | Successfully retrieved objection-handling guidance along with supporting policy information, producing a grounded response. |
+
+### Overall Performance
+
+| Metric | Result |
+|---------|:------:|
+| Total Queries Evaluated | **5** |
+| Correct Retrievals | **2** |
+| Partially Correct / Ambiguous | **2** |
+| Correctly Rejected (Low Confidence) | **1** |
+| Hallucinated Responses | **0** |
+
+### Key Observations
+
+- ✅ The retrieval system performs reliably for **policy-related** and **objection-handling** queries where relevant knowledge exists.
+- ✅ The confidence threshold successfully prevents hallucinations by rejecting unsupported queries instead of generating misleading answers.
+- ⚠️ Retrieval quality is limited by the coverage of the indexed knowledge base. Missing qualification-related content resulted in a semantically similar but incorrect match.
+- ⚠️ Broad or ambiguous questions can retrieve multiple valid contexts, indicating the need for a clarification step before response generation.
+
+> **Conclusion:** The evaluation demonstrates that the retrieval pipeline effectively grounds responses when relevant knowledge is available and safely avoids hallucinations when confidence is low. Future enhancements will focus on improving knowledge base coverage and refining confidence-based retrieval strategies.
+
+
+## 📞 Sample Voice Conversation
+
+A complete transcript of a real conversation with the voice assistant is available here:
+
+📄 **[Sample Voice Call Transcript](docs/Ques1_sample_call_transcript_english.md)**
+
+The conversation demonstrates:
+- Lead qualification flow
+- Retrieval-Augmented Generation (RAG)
+- Objection handling
+- Medical safety guardrails
+- Escalation to a licensed agent when required
+
+## 🌎 Localization Support
+
+The voice AI system supports localized conversations for Filipino (Tagalog) and Bahasa Indonesia.
+
+Supported features:
+- Multi-language ASR/TTS configuration
+- Cultural conversational adaptation
+- Local financial and insurance terminology handling
+- Objection management and human-agent escalation
+
+Detailed localization testing results are available in:
+`docs/localization-evaluation.md`
