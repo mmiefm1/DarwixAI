@@ -116,7 +116,6 @@ all three assistants without cross-contamination.
   auditable.
 
 
-## 📁 Project Structure
 
 ## 📁 Project Structure
 
@@ -260,7 +259,7 @@ and settings documented in `voice_agent/*.txt` and `multilingual/*.txt`.
 ## Q1 — Health Insurance Voice Agent
 - **Use case:** Health insurance lead qualification
 - **Web calling interface:** `voice_agent/web_calling_interface.html`
-- **Test call recordings/transcripts:** `docs/transcripts/Ques1_*.txt`
+- **Test call transcripts:** `docs/transcripts/Ques1_*.txt`
 - **Sample voice call audio:** [`docs/Audio/Ques1_voice_agent_english.wav`](docs/Audio/Ques1_voice_agent_english.wav)
 - **Test coverage:** cooperative customer, objection, incomplete/conflicting
   details, out-of-scope question, human-assistance request 
@@ -285,7 +284,8 @@ and settings documented in `voice_agent/*.txt` and `multilingual/*.txt`.
 - **Indonesia:** multifinance, Bahasa Indonesia, Deepgram nova-3 (language: id),
   config in `multilingual/vapi_id_config.txt`
 - **Localization evidence:** `docs/localization_notes.md`
-- **Test call recordings/transcripts:** `docs/transcripts/q3_ph_*.txt`, `q3_id_*.txt`
+- **Test call transcripts:** `docs/transcripts/Ques3_*.txt`
+- **Sample voice call audio:** `docs/Audio/Ques3_voice_call_*.wav`
 
 ## Q4 — Real-Time Nudges
 *[To be completed — will document streaming pipeline, latency measurements,
